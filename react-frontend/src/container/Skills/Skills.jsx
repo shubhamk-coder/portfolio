@@ -15,12 +15,23 @@ const Skills = () => {
     const skillsQuery = '*[_type == "skills" && !(_id in path("drafts.**"))]';
 
     client.fetch(query).then((data) => {
-      setExperiences(data);
+      // Sort experiences by order field (items with order come first, then items without)
+      const sorted = [...data].sort((a, b) => {
+        const orderA = a.order ?? Infinity;
+        const orderB = b.order ?? Infinity;
+        return orderA - orderB;
+      });
+      setExperiences(sorted);
     });
 
     client.fetch(skillsQuery).then((data) => {
-      setSkills(data);
-      console.log("sklls", data);
+      // Sort skills by order field (items with order come first, then items without)
+      const sorted = [...data].sort((a, b) => {
+        const orderA = a.order ?? Infinity;
+        const orderB = b.order ?? Infinity;
+        return orderA - orderB;
+      });
+      setSkills(sorted);
     });
   }, []);
 

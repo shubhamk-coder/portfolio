@@ -16,8 +16,13 @@ const Work = () => {
     const query = '*[_type == "works" && !(_id in path("drafts.**"))]';
 
     client.fetch(query).then((data) => {
-      setWorks(data);
-      setFilterWork(data);
+      const sorted = [...data].sort((a, b) => {
+        const orderA = a.order ?? Infinity;
+        const orderB = b.order ?? Infinity;
+        return orderA - orderB;
+      });
+      setWorks(sorted);
+      setFilterWork(sorted);
     });
   }, []);
 
