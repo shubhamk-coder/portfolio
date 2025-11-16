@@ -11,8 +11,8 @@ const Skills = () => {
   const [skills, setSkills] = useState([]);
 
   useEffect(() => {
-    const query = '*[_type == "experiences"]';
-    const skillsQuery = '*[_type == "skills"]';
+    const query = '*[_type == "experiences" && !(_id in path("drafts.**"))]';
+    const skillsQuery = '*[_type == "skills" && !(_id in path("drafts.**"))]';
 
     client.fetch(query).then((data) => {
       setExperiences(data);
@@ -20,6 +20,7 @@ const Skills = () => {
 
     client.fetch(skillsQuery).then((data) => {
       setSkills(data);
+      console.log("sklls", data);
     });
   }, []);
 
@@ -34,12 +35,11 @@ const Skills = () => {
               whileInView={{ opacity: [0, 1] }}
               transition={{ duration: 0.5 }}
               className="app__skills-item app__flex"
-              key={skill.name}
-            >
+              key={skill._id}>
               <div
                 className="app__flex"
                 style={{ backgroundColor: skill.bgColor }}
-              >
+                key={skill._id}>
                 <img src={urlFor(skill.icon)} alt={skill.name} />
               </div>
               <p className="p-text">{skill.name}</p>
@@ -48,7 +48,7 @@ const Skills = () => {
         </motion.div>
         <div className="app__skills-exp">
           {experiences.map((experience) => (
-            <motion.div className="app__skills-exp-item" key={experience.year}>
+            <motion.div className="app__skills-exp-item" key={experience._id}>
               <div className="app__skills-exp-year">
                 <p className="bold-text">{experience.year}</p>
               </div>
@@ -61,8 +61,7 @@ const Skills = () => {
                       className="app__skills-exp-work"
                       data-tip
                       data-for={work.name}
-                      key={work.name}
-                    >
+                      key={work.name}>
                       <h4 className="bold-text">{work.name}</h4>
                       <p className="p-text">{work.company}</p>
                     </motion.div>
@@ -70,8 +69,7 @@ const Skills = () => {
                       id={work.name}
                       effect="solid"
                       arrowColor="#fff"
-                      className="skills-tooltip"
-                    >
+                      className="skills-tooltip">
                       {work.desc}
                     </Tooltip>
                   </>

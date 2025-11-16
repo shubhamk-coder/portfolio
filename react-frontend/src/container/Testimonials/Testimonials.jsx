@@ -16,8 +16,8 @@ const Testimonials = () => {
   };
 
   useEffect(() => {
-    const query = '*[_type == "testimonials"]';
-    const brandsQuery = '*[_type == "brands"]';
+    const query = '*[_type == "testimonials" && !(_id in path("drafts.**"))]';
+    const brandsQuery = '*[_type == "brands" && !(_id in path("drafts.**"))]';
 
     client.fetch(query).then((data) => {
       setTestimonials(data);
